@@ -17,7 +17,20 @@ class App extends React.Component {
     this.addTrack = this.addTrack.bind(this);
     this.removeTrack = this.removeTrack.bind(this);
     this.updatePlaylistName = this.updatePlaylistName.bind(this);
+    this.savePlaylist = this.savePlaylist.bind(this);
+    this.search = this.search.bind(this);
   };
+
+  search(term) {
+    console.log(term);
+  }
+
+  // Generate an array of uri values called trackURIs from the playlistTracks property.
+  savePlaylist() {
+    const trackURIs = this.state.playlistTracks.map(track => {
+      return track.uri;
+    })
+  }
 
   updatePlaylistName(name) {
     this.setState({playlistName: name});
@@ -46,10 +59,10 @@ class App extends React.Component {
   <div>
   <h1>vladcancode.com</h1>
   <div class="App">
-    <SearchBar />
+    <SearchBar onSearch={this.search} />
     <div class="App-playlist">
       <SearchResults onAdd={this.addTrack} searchResults={this.state.searchResults}/>
-      <Playlist onNameChange={this.updatePlaylistName} onRemove={this.removeTrack} playlistName={this.state.playlistName} playlistTracks={this.state.playlistTracks} />
+      <Playlist onSave={this.savePlaylist} onNameChange={this.updatePlaylistName} onRemove={this.removeTrack} playlistName={this.state.playlistName} playlistTracks={this.state.playlistTracks} />
     </div>
   </div>
   </div>);
