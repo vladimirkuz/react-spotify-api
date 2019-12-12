@@ -10,9 +10,9 @@ class App extends React.Component {
 
   constructor(props) {
     super(props);
-    this.state = {searchResults: [{name: 'song', artist: 'vlad', album: 'album', id: 1}, {name: 'song', artist: 'vlad', album: 'album', id: 2}, {name: 'song', artist: 'vlad', album: 'album', id: 3}],
+    this.state = {searchResults: [],
                   playlistName: 'My Playlist',
-                  playlistTracks: [{name: 'song', artist: 'vlad', album: 'album', id: 1}, {name: 'song', artist: 'vlad', album: 'album', id: 2}, {name: 'song', artist: 'vlad', album: 'album', id: 3}]
+                  playlistTracks: []
                 };
 
     this.addTrack = this.addTrack.bind(this);
@@ -23,15 +23,25 @@ class App extends React.Component {
   };
 
   search(term) {
-    const searchResults = Spotify.search(term);
-    this.setState({searchResults: searchResults});
+    Spotify.search(term).then(searchResults => {
+      this.setState({searchResults: searchResults})
+    });
   }
 
   // Generate an array of uri values called trackURIs from the playlistTracks property.
   savePlaylist() {
-    const trackURIs = this.state.playlistTracks.map(track => {
+
+    const trackUris = this.state.playlistTracks.map(track => {
       return track.uri;
     })
+
+    Spotify.savePlaylist(this.state.playlistName, trackUris).then(()=>{
+      this.setState({
+        playlistName: 'New Playlist',
+        playlistTracks: []
+      })
+    });
+
   }
 
   updatePlaylistName(name) {
@@ -60,9 +70,9 @@ class App extends React.Component {
     return (
   <div>
   <h1>vladcancode.com</h1>
-  <div class="App">
+  <div className="App">
     <SearchBar onSearch={this.search} />
-    <div class="App-playlist">
+    <div className="App-playlist">
       <SearchResults onAdd={this.addTrack} searchResults={this.state.searchResults}/>
       <Playlist onSave={this.savePlaylist} onNameChange={this.updatePlaylistName} onRemove={this.removeTrack} playlistName={this.state.playlistName} playlistTracks={this.state.playlistTracks} />
     </div>
