@@ -6,18 +6,40 @@ const redirectURI = 'https://www.vladcancode.com';
 
 const Spotify = {
 
+  search(term) {
+    const accessToken = Spotify.getAccessToken();
+
+    return fetch(`https://cors-anywhere.herokuapp.com/https://api.spotify.com/v1/search?type=track&q=${term}`,
+    {headers: {Authorization: `Bearer ${accessToken}`}}).then(response => {
+      if (response.ok) {
+        return response.json();
+      }
+      throw new Error('Request failed - return to vladcancode.com');
+    }, networkError => console.log(networkError.message)).then(jsonResponse => {
+
+      if (!jsonResponse.tracks) {
+        return [];
+      }
+
+      return jsonResponse.tracks.items.map(track => {
+        return {
+          track: track:id,
+          name: track.name,
+          artist: track.artists[0].name,
+          album: track.album.name,
+          uri: track.uri
+        }
+      })
+    })
+  },
+
   //Get a Spotify user’s access token
   getAccessToken() {
 
     // Condition 1: access toekn exists
-    if (accessToken){
+    if (accessToken) {
       return accessToken;
     }
-
-    /* return fetch(`https://cors-anywhere.herokuapp.com/https://accounts.spotify.com/authorize`,
-    {client_id: clientId,
-    response_type: 'token',
-    redirect_uri: 'https://www.vladcancode.com/Completed/Spotify/index.html'}).then(response => { */
 
     //save parameters in URL
     const accessTokenMatch = window.location.href.match(/access_token=([^&]*)/);
@@ -27,7 +49,7 @@ const Spotify = {
     if (accessTokenMatch && expiresInMatch) {
       let accessToken = accessTokenMatch[1];
       const expiresIn = Number(expiresInMatch[1]);
-      // Clears parameters
+      // Clear parameters
       window.setTimeout(() => accessToken = '', expiresIn * 1000);
       window.history.pushState('Access Token', null, '/');
     } else {
