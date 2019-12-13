@@ -81,7 +81,7 @@ class App extends React.Component {
   render() {
     return (
   <div>
-  <h1>vladcancode.com</h1>
+  <h1><a href='https://www.vladcancode.com'>vladcancode.com</a></h1>
   <div className="App">
     <SearchBar getAuthorization={this.getAuthorization} hasAuthorization={this.state.hasAuthorization} onSearch={this.search} />
     <div className="App-playlist">

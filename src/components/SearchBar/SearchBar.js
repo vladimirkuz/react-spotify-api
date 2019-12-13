@@ -11,16 +11,12 @@ class SearchBar extends React.Component {
     this.search = this.search.bind(this);
     this.handleTermChange = this.handleTermChange.bind(this);
     this.renderAction = this.renderAction.bind(this);
-  //  this.getAuthorization = this.getAuthorization.bind(this);
   }
 
+  //search artist
   search() {
     this.props.onSearch(this.state.term);
   }
-
-  //getAuthorization() {
-  //  this.props.getAuthorization;
-  //}
 
   renderAction() {
 
@@ -31,7 +27,11 @@ class SearchBar extends React.Component {
               <button onClick={this.search} className="SearchButton">SEARCH</button>
           </div>)
     }else{
-      return <button onClick={this.props.getAuthorization} className="SearchButton">AUTHORIZE</button>
+      return (
+        <div className="SearchBar">
+          <button onClick={this.props.getAuthorization} className="SearchButton">ACCESS SPOTIFY</button>
+        </div>
+      )
     }
   }
 

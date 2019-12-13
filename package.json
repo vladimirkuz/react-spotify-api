@@ -1,5 +1,6 @@
 {
   "name": "spotify",
+  "homepage" : "https://www.vladcancode.com/Completed/Spotify/",
   "version": "0.1.0",
   "private": true,
   "dependencies": {

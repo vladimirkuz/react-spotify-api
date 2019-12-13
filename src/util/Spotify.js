@@ -2,7 +2,7 @@
 // The implicit grant flow returns a user’s access token in the URL.
 let accessToken = '';
 const clientId = 'b89bb1d56c744e82973c507abc904d5c';
-const redirectURI = 'http://localhost:3000/';
+const redirectURI = 'https://www.vladcancode.com/Completed/Spotify/index.html';
 
 const Spotify = {
 
@@ -68,6 +68,7 @@ const Spotify = {
 
   savePlaylist(playlistName, trackURIs) {
 
+    //must have playlist name (default: My Playlist) and track array
     if ((!playlistName || !trackURIs.length)) {
       return;
     }
@@ -77,7 +78,7 @@ const Spotify = {
     const headers = {Authorization: `Bearer ${accessToken}`};
     let userId;
 
-
+    //get Spotify user name
     return fetch(`https://api.spotify.com/v1/me`,{headers: headers}
     ).then(response => {
       if (response.ok){
@@ -87,6 +88,7 @@ const Spotify = {
     }, networkError => console.log(networkError.message)
     ).then(jsonResponse => {
       userId = jsonResponse.id;
+      //create play list
       return fetch(`https://api.spotify.com/v1/users/${userId}/playlists`,
         {
           headers: {Authorization: `Bearer ${accessToken}`, 'Content-Type': 'application/json'},
@@ -100,6 +102,7 @@ const Spotify = {
         }, networkError => console.log(networkError.message)
         ).then(jsonResponse => {
           const playlistId = jsonResponse.id;
+          //add tracks to playlist
           return fetch(`https://api.spotify.com/v1/playlists/${playlistId}/tracks`,{
             headers: {Authorization: `Bearer ${accessToken}`, Accept: 'application/json'},
             method: 'POST',

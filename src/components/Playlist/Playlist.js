@@ -17,7 +17,7 @@ class Playlist extends React.Component {
   render () {
     return (
       <div className="Playlist">
-        <input onChange={this.handleNameChange} defaultValue={"Enter playlist name"}/>
+        <input onChange={this.handleNameChange} placeholder={"Enter playlist name"}/>
         <TrackList isRemoval={true} onRemove={this.props.onRemove} tracks={this.props.playlistTracks} />
         <button onClick={this.props.onSave} className="Playlist-save">SAVE TO SPOTIFY</button>
       </div>
