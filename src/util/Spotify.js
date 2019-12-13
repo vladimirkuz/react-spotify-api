@@ -6,6 +6,7 @@ const redirectURI = 'http://localhost:3000/';
 
 const Spotify = {
 
+  // search tracks
   search(term) {
     const accessToken = Spotify.getAccessToken();
 
@@ -21,6 +22,7 @@ const Spotify = {
         return [];
       }
 
+      //track object
       return jsonResponse.tracks.items.map(track => {
         return {
           id: track.id,
@@ -33,20 +35,22 @@ const Spotify = {
     })
   },
 
+
   //Get a Spotify user’s access token
   getAccessToken() {
 
-    // Condition 1: access toekn exists
+    // Condition 1: access token already exists
     if (accessToken) {
       return accessToken;
     }
 
     //save parameters in URL
-    const accessTokenMatch = window.location.href.match(/access_token=([^&]*)/);
-    const expiresInMatch = window.location.href.match(/expires_in=([^&]*)/);
+    let accessTokenMatch = window.location.href.match(/access_token=([^&]*)/);
+    let expiresInMatch = window.location.href.match(/expires_in=([^&]*)/);
 
     // Condition 2: access token is in URL
     if (accessTokenMatch && expiresInMatch) {
+
       accessToken = accessTokenMatch[1];
       const expiresIn = Number(expiresInMatch[1]);
       // Clear parameters
@@ -56,6 +60,7 @@ const Spotify = {
    } else {
        //Condition 3: Have application request authorization
       window.location = `https://accounts.spotify.com/authorize?client_id=${clientId}&response_type=token&scope=playlist-modify-public&redirect_uri=${redirectURI}`;
+
     }
 
 
@@ -74,7 +79,12 @@ const Spotify = {
 
 
     return fetch(`https://api.spotify.com/v1/me`,{headers: headers}
-    ).then(response => response.json()
+    ).then(response => {
+      if (response.ok){
+        return response.json()
+      }
+      throw new Error('UserID request failed!')
+    }, networkError => console.log(networkError.message)
     ).then(jsonResponse => {
       userId = jsonResponse.id;
       return fetch(`https://api.spotify.com/v1/users/${userId}/playlists`,
@@ -82,8 +92,13 @@ const Spotify = {
           headers: {Authorization: `Bearer ${accessToken}`, 'Content-Type': 'application/json'},
           method: 'POST',
           body: JSON.stringify({name:playlistName})
-        }).then(response => response.json()
-      ).then(jsonResponse => {
+        }).then(response => {
+          if (response.ok){
+            return response.json()
+          }
+          throw new Error('PlaylistID request failed!')
+        }, networkError => console.log(networkError.message)
+        ).then(jsonResponse => {
           const playlistId = jsonResponse.id;
           return fetch(`https://api.spotify.com/v1/playlists/${playlistId}/tracks`,{
             headers: {Authorization: `Bearer ${accessToken}`, Accept: 'application/json'},

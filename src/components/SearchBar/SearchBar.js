@@ -10,10 +10,29 @@ class SearchBar extends React.Component {
 
     this.search = this.search.bind(this);
     this.handleTermChange = this.handleTermChange.bind(this);
+    this.renderAction = this.renderAction.bind(this);
+  //  this.getAuthorization = this.getAuthorization.bind(this);
   }
 
   search() {
     this.props.onSearch(this.state.term);
+  }
+
+  //getAuthorization() {
+  //  this.props.getAuthorization;
+  //}
+
+  renderAction() {
+
+    if (this.props.hasAuthorization){
+      return (
+          <div className="SearchBar">
+              <input onChange={this.handleTermChange} placeholder="Enter A Song, Album, or Artist" />
+              <button onClick={this.search} className="SearchButton">SEARCH</button>
+          </div>)
+    }else{
+      return <button onClick={this.props.getAuthorization} className="SearchButton">AUTHORIZE</button>
+    }
   }
 
   handleTermChange(event) {
@@ -22,10 +41,10 @@ class SearchBar extends React.Component {
 
   render() {
     return (
-      <div className="SearchBar">
-        <input onChange={this.handleTermChange} placeholder="Enter A Song, Album, or Artist" />
-        <button onClick={this.search} className="SearchButton">SEARCH</button>
-      </div>
+
+
+        this.renderAction()
+
     )
   }
 }

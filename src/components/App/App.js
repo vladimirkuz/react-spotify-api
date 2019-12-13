@@ -12,7 +12,8 @@ class App extends React.Component {
     super(props);
     this.state = {searchResults: [],
                   playlistName: 'My Playlist',
-                  playlistTracks: []
+                  playlistTracks: [],
+                  hasAuthorization: ''
                 };
 
     this.addTrack = this.addTrack.bind(this);
@@ -20,12 +21,23 @@ class App extends React.Component {
     this.updatePlaylistName = this.updatePlaylistName.bind(this);
     this.savePlaylist = this.savePlaylist.bind(this);
     this.search = this.search.bind(this);
+    this.getAuthorization = this.getAuthorization.bind(this);
+
   };
 
   search(term) {
     Spotify.search(term).then(searchResults => {
       this.setState({searchResults: searchResults})
     });
+  }
+
+  getAuthorization() {
+
+    let accessToken = Spotify.getAccessToken();
+
+    this.setState({hasAuthorization: accessToken})
+
+
   }
 
   // Generate an array of uri values called trackURIs from the playlistTracks property.
@@ -71,7 +83,7 @@ class App extends React.Component {
   <div>
   <h1>vladcancode.com</h1>
   <div className="App">
-    <SearchBar onSearch={this.search} />
+    <SearchBar getAuthorization={this.getAuthorization} hasAuthorization={this.state.hasAuthorization} onSearch={this.search} />
     <div className="App-playlist">
       <SearchResults onAdd={this.addTrack} searchResults={this.state.searchResults}/>
       <Playlist onSave={this.savePlaylist} onNameChange={this.updatePlaylistName} onRemove={this.removeTrack} playlistName={this.state.playlistName} playlistTracks={this.state.playlistTracks} />
