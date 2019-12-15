@@ -8,7 +8,9 @@ Search artists, songs, and albums.
 
 Add songs to a playlist and save it to your spotify account.
 
-### `yarn start`
+### Setup
+
+To run app:
 
 npm install
 
