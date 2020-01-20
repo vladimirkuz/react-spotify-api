@@ -12,7 +12,7 @@ Add songs to a playlist and save it to your spotify account.
 
 To run app:
 
-npm install
+```npm install```
 
-npm start
+```npm start```
 
